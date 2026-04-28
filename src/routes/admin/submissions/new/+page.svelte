@@ -44,7 +44,7 @@
             <optgroup label={g.testName}>
               {#each g.versions as v (v.id)}
                 <option value={v.id} selected={String(v.id) === form?.values?.testVersionId}>
-                  v{v.versionNumber}{v.isCurrent ? ' (current)' : ''}
+                  {g.testName} · v{v.versionNumber}{v.isCurrent ? ' (current)' : ''}
                 </option>
               {/each}
             </optgroup>
