@@ -12,14 +12,30 @@
   let { title, subtitle, html, isSolo, onSolo, onExitSolo }: Props = $props();
 
   let shimmedHtml = $derived(html ? injectSandboxStorageShim(html) : null);
+
+  $effect(() => {
+    if (!isSolo) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  });
 </script>
 
+{#if isSolo}
+  <button
+    type="button"
+    aria-label="Exit solo view"
+    onclick={onExitSolo}
+    class="fixed inset-0 z-40 cursor-pointer bg-black/70 backdrop-blur-sm"
+  ></button>
+{/if}
+
 <div
-  class="surface-card lift group relative flex flex-col overflow-hidden rounded-3xl focus-within:border-[var(--color-accent-500)]"
-  class:fixed={isSolo}
-  class:inset-4={isSolo}
-  class:z-50={isSolo}
-  class:cell-solo={isSolo}
+  class={`surface-card lift group flex flex-col overflow-hidden rounded-3xl focus-within:border-[var(--color-accent-500)] ${
+    isSolo ? 'fixed inset-4 z-50 cell-solo' : 'relative'
+  }`}
 >
   <header
     class="flex items-center gap-3 border-b border-white/[0.06] bg-black/20 px-4 py-3"
