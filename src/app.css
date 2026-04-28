@@ -1,0 +1,229 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/geist';
+@import '@fontsource-variable/geist-mono';
+
+@theme {
+  /* Type — Geist as the workhorse, Geist Mono for IDs, version numbers, code. */
+  --font-sans:
+    'Geist Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono:
+    'Geist Mono Variable', ui-monospace, 'JetBrains Mono', SFMono-Regular, Menlo, monospace;
+
+  /* Surface — refined zinc, hand-picked off-black instead of pure #000. */
+  --color-ink-0: oklch(0.14 0 0);
+  --color-ink-1: oklch(0.17 0 0);
+  --color-ink-2: oklch(0.21 0 0);
+  --color-ink-3: oklch(0.28 0 0);
+
+  /* Single accent — calibrated chartreuse, desaturated for premium feel. */
+  --color-accent-300: oklch(0.92 0.16 130);
+  --color-accent-400: oklch(0.86 0.18 130);
+  --color-accent-500: oklch(0.78 0.19 130);
+  --color-accent-600: oklch(0.66 0.18 130);
+
+  /* Premium spring-like easings. */
+  --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-overshoot: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    font-feature-settings:
+      'ss01' on,
+      'cv11' on,
+      'kern' on;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    background:
+      radial-gradient(
+        ellipse 80% 50% at 50% -10%,
+        oklch(0.22 0.05 130 / 0.18),
+        transparent 70%
+      ),
+      var(--color-ink-0);
+    color: oklch(0.95 0 0);
+  }
+
+  ::selection {
+    background: var(--color-accent-500);
+    color: var(--color-ink-0);
+  }
+
+  /* Inputs default to subtle, breathing surfaces. */
+  input,
+  select,
+  textarea,
+  button {
+    font-family: inherit;
+  }
+}
+
+@layer utilities {
+  /* Fine grain overlay: pinned, pointer-event-none, never on scrolling content. */
+  .grain-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    pointer-events: none;
+    opacity: 0.04;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.65'/></svg>");
+  }
+
+  /* Inset highlight + tinted shadow — premium card materiality. */
+  .surface-card {
+    background-color: var(--color-ink-1);
+    border: 1px solid oklch(1 0 0 / 0.06);
+    box-shadow:
+      inset 0 1px 0 oklch(1 0 0 / 0.04),
+      0 1px 0 oklch(0 0 0 / 0.4),
+      0 24px 48px -28px oklch(0 0 0 / 0.6);
+  }
+
+  .surface-raised {
+    background-color: var(--color-ink-2);
+    border: 1px solid oklch(1 0 0 / 0.08);
+    box-shadow:
+      inset 0 1px 0 oklch(1 0 0 / 0.06),
+      0 28px 60px -28px oklch(0 0 0 / 0.7);
+  }
+
+  /* Liquid-glass refraction edge for sticky toolbars. */
+  .glass {
+    background-color: oklch(0.14 0 0 / 0.72);
+    backdrop-filter: blur(14px) saturate(1.4);
+    -webkit-backdrop-filter: blur(14px) saturate(1.4);
+    border-bottom: 1px solid oklch(1 0 0 / 0.06);
+    box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.05);
+  }
+
+  /* Section heading eyebrow — small, tracked, mono. */
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: oklch(0.6 0 0);
+  }
+
+  /* Animated gradient text fill — used sparingly, only for one accent line. */
+  .gradient-text {
+    background: linear-gradient(
+      120deg,
+      oklch(0.95 0 0) 0%,
+      oklch(0.95 0 0) 40%,
+      var(--color-accent-400) 60%,
+      oklch(0.95 0 0) 80%,
+      oklch(0.95 0 0) 100%
+    );
+    background-size: 200% 100%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    animation: gradient-sweep 8s var(--ease-spring) infinite;
+  }
+
+  /* Skeleton shimmer — for loading states. */
+  .shimmer {
+    position: relative;
+    overflow: hidden;
+    background: var(--color-ink-2);
+  }
+  .shimmer::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      oklch(1 0 0 / 0.04) 50%,
+      transparent 100%
+    );
+    animation: shimmer-sweep 2.4s var(--ease-spring) infinite;
+  }
+
+  /* Status dot pulse. */
+  .pulse-dot {
+    position: relative;
+  }
+  .pulse-dot::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 9999px;
+    background: inherit;
+    animation: pulse-out 2.4s var(--ease-spring) infinite;
+  }
+
+  /* Staggered cascade — readable via inline --i index. */
+  .cascade > * {
+    animation: cascade-in 0.7s var(--ease-spring) backwards;
+    animation-delay: calc(var(--i, 0) * 60ms);
+  }
+
+  /* Cubic-bezier hover lift, hardware accelerated. */
+  .lift {
+    transition: transform 0.4s var(--ease-spring), border-color 0.3s var(--ease-spring),
+      box-shadow 0.4s var(--ease-spring);
+  }
+  .lift:hover {
+    transform: translateY(-2px);
+    border-color: oklch(1 0 0 / 0.14);
+  }
+  .lift:active {
+    transform: translateY(0px) scale(0.995);
+  }
+}
+
+@keyframes gradient-sweep {
+  0%,
+  100% {
+    background-position: 200% 0;
+  }
+  50% {
+    background-position: 0% 0;
+  }
+}
+
+@keyframes shimmer-sweep {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes pulse-out {
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+
+@keyframes cascade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

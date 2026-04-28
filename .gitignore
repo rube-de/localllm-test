@@ -1,0 +1,25 @@
+node_modules
+.DS_Store
+
+# Build / SvelteKit
+.svelte-kit
+build
+.vercel
+
+# Env
+.env
+.env.*
+!.env.example
+
+# Drizzle local DB
+local.db
+local.db-journal
+
+# Editor / OS
+.idea
+.vscode
+*.log
+
+.dev
+.claude/CLAUDE.md
+CLAUDE.local.md
