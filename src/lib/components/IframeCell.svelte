@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { injectSandboxStorageShim } from '$lib/utils';
+
   type Props = {
     title: string;
     subtitle?: string;
@@ -8,6 +10,8 @@
     onExitSolo: () => void;
   };
   let { title, subtitle, html, isSolo, onSolo, onExitSolo }: Props = $props();
+
+  let shimmedHtml = $derived(html ? injectSandboxStorageShim(html) : null);
 </script>
 
 <div
@@ -67,10 +71,10 @@
   </header>
 
   <div class="relative flex-1 min-h-[60vh]">
-    {#if html}
+    {#if shimmedHtml}
       <iframe
         {title}
-        srcdoc={html}
+        srcdoc={shimmedHtml}
         sandbox="allow-scripts"
         loading="lazy"
         referrerpolicy="no-referrer"
